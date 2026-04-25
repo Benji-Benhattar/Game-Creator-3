@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.pyo
+
+# Local download cache for Unity Asset Store assets
+assets-cache/
