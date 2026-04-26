@@ -1,7 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getChildren, getPath, getRelated, getSubject, isLeaf } from "@/lib/tree";
-import { getStoredCourse, hasCertificate } from "@/lib/db";
+import {
+  getCertifiedSubjectIds,
+  getStartedSubjectIds,
+  getStoredCourse,
+  hasCertificate,
+} from "@/lib/db";
 
 export default async function SubjectPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -14,6 +19,8 @@ export default async function SubjectPage({ params }: { params: Promise<{ id: st
   const leaf = isLeaf(id);
   const stored = leaf ? getStoredCourse(id) : null;
   const passed = leaf ? hasCertificate(id) : false;
+  const certified = getCertifiedSubjectIds();
+  const started = getStartedSubjectIds();
 
   return (
     <div className="space-y-10">
@@ -58,19 +65,36 @@ export default async function SubjectPage({ params }: { params: Promise<{ id: st
         <section>
           <h2 className="text-lg font-semibold mb-3">Subfields</h2>
           <div className="grid gap-3 sm:grid-cols-2">
-            {children.map((c) => (
-              <Link
-                key={c.id}
-                href={`/subject/${c.id}`}
-                className="block rounded-md border border-amber-900/20 bg-white/40 p-4 hover:border-amber-700"
-              >
-                <div className="font-medium">
-                  {c.name}
-                  {!isLeaf(c.id) && <span className="text-ink/40"> ›</span>}
-                </div>
-                <p className="text-sm text-ink/60 mt-1">{c.blurb}</p>
-              </Link>
-            ))}
+            {children.map((c) => {
+              const childLeaf = isLeaf(c.id);
+              const childCertified = certified.has(c.id);
+              const childStarted = started.has(c.id);
+              return (
+                <Link
+                  key={c.id}
+                  href={`/subject/${c.id}`}
+                  className="block rounded-md border border-amber-900/20 bg-white/40 p-4 hover:border-amber-700"
+                >
+                  <div className="font-medium flex items-center gap-2">
+                    <span>
+                      {c.name}
+                      {!childLeaf && <span className="text-ink/40"> ›</span>}
+                    </span>
+                    {childCertified && (
+                      <span className="text-xs px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                        🎓
+                      </span>
+                    )}
+                    {childStarted && !childCertified && (
+                      <span className="text-xs px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-800">
+                        started
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-sm text-ink/60 mt-1">{c.blurb}</p>
+                </Link>
+              );
+            })}
           </div>
         </section>
       )}

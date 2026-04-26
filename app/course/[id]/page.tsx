@@ -189,10 +189,20 @@ export default function CoursePage({ params }: { params: Promise<{ id: string }>
               </p>
             ) : (
               <p className="text-ink/70">
-                You need 4 correct to earn a certificate. Review the explanations above and try again
-                soon — answers reset on refresh.
+                You need 4 correct to earn a certificate. Review the explanations above, then retake
+                the quiz when you're ready.
               </p>
             )}
+            <button
+              onClick={() => {
+                setGrade(null);
+                setAnswers({});
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="mt-4 px-4 py-2 rounded-md border border-amber-700 text-amber-800 text-sm font-medium hover:bg-amber-50"
+            >
+              {grade.passed ? "Retake quiz" : "Try again"}
+            </button>
           </div>
         )}
       </section>

@@ -108,3 +108,17 @@ export function hasCertificate(subjectId: string): boolean {
     .get(subjectId);
   return !!row;
 }
+
+export function getCertifiedSubjectIds(): Set<string> {
+  const rows = db()
+    .prepare("SELECT DISTINCT subject_id FROM certificates")
+    .all() as { subject_id: string }[];
+  return new Set(rows.map((r) => r.subject_id));
+}
+
+export function getStartedSubjectIds(): Set<string> {
+  const rows = db()
+    .prepare("SELECT subject_id FROM courses")
+    .all() as { subject_id: string }[];
+  return new Set(rows.map((r) => r.subject_id));
+}

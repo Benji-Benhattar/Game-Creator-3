@@ -18,6 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </Link>
             <nav className="flex gap-6 text-sm">
               <Link href="/" className="hover:text-amber-700">Browse</Link>
+              <Link href="/all" className="hover:text-amber-700">All subjects</Link>
               <Link href="/certificates" className="hover:text-amber-700">Certificates</Link>
             </nav>
           </div>
