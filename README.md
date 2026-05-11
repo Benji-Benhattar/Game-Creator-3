@@ -19,7 +19,8 @@ science.
 
 - Next.js 15 (App Router) + TypeScript
 - Tailwind CSS
-- **Vercel Postgres** (`@vercel/postgres`) for course / certificate storage
+- **Postgres** via [`postgres`](https://github.com/porsager/postgres) (postgres.js) for course /
+  certificate storage — works against any Postgres URL, including the one Vercel Postgres provisions
 - Anthropic SDK with Claude Opus 4.7 (adaptive thinking + structured output) for course generation
 
 ## Deploy to Vercel
@@ -70,7 +71,7 @@ Neon, etc.) in `.env.local` and set `ANTHROPIC_API_KEY`. Then `npm install && np
 | `app/api/course/[id]/route.ts` | `GET` returns or generates the course; `POST` grades answers |
 | `lib/tree.ts` | The pre-generated science knowledge tree |
 | `lib/claude.ts` | Course generation prompt + Anthropic client |
-| `lib/db.ts` | Postgres schema + access layer (`@vercel/postgres`) |
+| `lib/db.ts` | Postgres schema + access layer (`postgres` aka postgres.js) |
 
 ## Extending the tree
 
