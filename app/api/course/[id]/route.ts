@@ -22,14 +22,14 @@ export async function GET(
     );
   }
 
-  const existing = getStoredCourse(id);
+  const existing = await getStoredCourse(id);
   if (existing) {
     return NextResponse.json({ course: existing, cached: true });
   }
 
   try {
     const generated = await generateCourse(id);
-    const stored = saveCourse({
+    const stored = await saveCourse({
       subject_id: id,
       title: generated.title,
       content: generated.content,
@@ -55,7 +55,7 @@ export async function POST(
   const body = (await req.json().catch(() => ({}))) as {
     answers?: number[];
   };
-  const stored = getStoredCourse(id);
+  const stored = await getStoredCourse(id);
   if (!stored) {
     return NextResponse.json({ error: "Course not generated yet" }, { status: 400 });
   }
@@ -74,10 +74,10 @@ export async function POST(
     return { correct, correct_index: q.correct_index, explanation: q.explanation };
   });
   const total = stored.questions.length;
-  const passed = score >= Math.ceil(total * 0.8); // 80% to pass
+  const passed = score >= Math.ceil(total * 0.8);
   let certificate = null;
   if (passed) {
-    certificate = recordCertificate(id, score, total);
+    certificate = await recordCertificate(id, score, total);
   }
   return NextResponse.json({ score, total, passed, results, certificate });
 }

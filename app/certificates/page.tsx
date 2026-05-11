@@ -4,8 +4,8 @@ import { getPath, getSubject } from "@/lib/tree";
 
 export const dynamic = "force-dynamic";
 
-export default function CertificatesPage() {
-  const certs = getCertificates();
+export default async function CertificatesPage() {
+  const certs = await getCertificates();
   return (
     <div className="space-y-8">
       <header>

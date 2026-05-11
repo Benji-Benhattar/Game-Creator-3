@@ -8,6 +8,8 @@ import {
   hasCertificate,
 } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 export default async function SubjectPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const subject = getSubject(id);
@@ -17,10 +19,12 @@ export default async function SubjectPage({ params }: { params: Promise<{ id: st
   const children = getChildren(id);
   const related = getRelated(id);
   const leaf = isLeaf(id);
-  const stored = leaf ? getStoredCourse(id) : null;
-  const passed = leaf ? hasCertificate(id) : false;
-  const certified = getCertifiedSubjectIds();
-  const started = getStartedSubjectIds();
+  const [stored, passed, certified, started] = await Promise.all([
+    leaf ? getStoredCourse(id) : Promise.resolve(null),
+    leaf ? hasCertificate(id) : Promise.resolve(false),
+    getCertifiedSubjectIds(),
+    getStartedSubjectIds(),
+  ]);
 
   return (
     <div className="space-y-10">

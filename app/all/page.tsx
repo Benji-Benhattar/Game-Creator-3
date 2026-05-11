@@ -4,9 +4,11 @@ import AllSubjectsClient from "./client";
 
 export const dynamic = "force-dynamic";
 
-export default function AllSubjectsPage() {
-  const certified = getCertifiedSubjectIds();
-  const started = getStartedSubjectIds();
+export default async function AllSubjectsPage() {
+  const [certified, started] = await Promise.all([
+    getCertifiedSubjectIds(),
+    getStartedSubjectIds(),
+  ]);
   const items = getAllSubjects().map((s) => ({
     id: s.id,
     name: s.name,

@@ -5,6 +5,9 @@ dist
 *.log
 .env
 .env.local
+.env.development.local
+.env.production.local
+.vercel
 data/*.db
 data/*.db-journal
 .DS_Store

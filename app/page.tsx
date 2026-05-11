@@ -4,11 +4,13 @@ import { getCertifiedSubjectIds, getStartedSubjectIds } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
-export default function Home() {
+export default async function Home() {
   const root = getRoot();
   const branches = getChildren(root.id);
-  const certified = getCertifiedSubjectIds();
-  const started = getStartedSubjectIds();
+  const [certified, started] = await Promise.all([
+    getCertifiedSubjectIds(),
+    getStartedSubjectIds(),
+  ]);
 
   function countLeavesUnder(id: string): { total: number; certified: number; started: number } {
     const children = getChildren(id);
